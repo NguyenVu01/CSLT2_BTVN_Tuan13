@@ -28,7 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.DataGridView = new System.Windows.Forms.DataGridView();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmDMChatLieu));
+            this.DataGridViewCL = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtMaChatLieu = new System.Windows.Forms.TextBox();
@@ -40,16 +41,17 @@
             this.btnDong = new System.Windows.Forms.Button();
             this.btnBoqua = new System.Windows.Forms.Button();
             this.btnLuu = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewCL)).BeginInit();
             this.SuspendLayout();
             // 
-            // DataGridView
+            // DataGridViewCL
             // 
-            this.DataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DataGridView.Location = new System.Drawing.Point(44, 135);
-            this.DataGridView.Name = "DataGridView";
-            this.DataGridView.Size = new System.Drawing.Size(600, 294);
-            this.DataGridView.TabIndex = 0;
+            this.DataGridViewCL.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DataGridViewCL.Location = new System.Drawing.Point(44, 135);
+            this.DataGridViewCL.Name = "DataGridViewCL";
+            this.DataGridViewCL.Size = new System.Drawing.Size(600, 294);
+            this.DataGridViewCL.TabIndex = 0;
+            this.DataGridViewCL.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView_CellClick);
             // 
             // label1
             // 
@@ -111,6 +113,7 @@
             this.btnXoa.TabIndex = 7;
             this.btnXoa.Text = "Xóa";
             this.btnXoa.UseVisualStyleBackColor = true;
+            this.btnXoa.Click += new System.EventHandler(this.btnXoa_Click);
             // 
             // btnSua
             // 
@@ -166,11 +169,15 @@
             this.Controls.Add(this.txtMaChatLieu);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.DataGridView);
+            this.Controls.Add(this.DataGridViewCL);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmDMChatLieu";
             this.Text = "frmDMChatLieu";
             this.Load += new System.EventHandler(this.frmDMChatLieu_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DataGridViewCL)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -178,7 +185,7 @@
 
         #endregion
 
-        private System.Windows.Forms.DataGridView DataGridView;
+        private System.Windows.Forms.DataGridView DataGridViewCL;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtMaChatLieu;

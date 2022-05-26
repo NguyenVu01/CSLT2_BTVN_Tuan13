@@ -76,6 +76,9 @@
     <EmbeddedResource Include="frmDMChatLieu.resx">
       <DependentUpon>frmDMChatLieu.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmDMHangHoa.resx">
+      <DependentUpon>frmDMHangHoa.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmDMHoaDon.resx">
       <DependentUpon>frmDMHoaDon.cs</DependentUpon>
     </EmbeddedResource>

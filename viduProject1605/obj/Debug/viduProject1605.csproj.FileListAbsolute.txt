@@ -11,3 +11,4 @@ D:\anh trai\viduProject1605\bin\Debug\viduProject1605.exe
 D:\anh trai\viduProject1605\bin\Debug\viduProject1605.pdb
 D:\anh trai\viduProject1605\obj\Debug\viduProject1605.exe
 D:\anh trai\viduProject1605\obj\Debug\viduProject1605.pdb
+D:\anh trai\viduProject1605\obj\Debug\viduProject1605.frmDMHangHoa.resources

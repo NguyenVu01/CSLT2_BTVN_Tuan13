@@ -52,15 +52,12 @@ namespace viduProject1605
             }
         }
 
-        public static DataTable GetDataToTable(string sql)
+        public static DataTable LoadDataToTable(string sql)
         {
-            SqlDataAdapter Mydata = new SqlDataAdapter();	// Khai báo
-     
-            Mydata.SelectCommand = new SqlCommand();
-            Mydata.SelectCommand.Connection = con; 	// Kết nối CSDL
-            Mydata.SelectCommand.CommandText = sql;	// Gán câu lệnh SELECT
+            //The hien so 2 cua SqlDataAdapter(<Tham so 1>, <Tham so 2>) 
+            SqlDataAdapter Myadapter = new SqlDataAdapter(sql, con);    // Khai báo
             DataTable table = new DataTable();    // Khai báo DataTable nhận dữ liệu trả về
-            Mydata.Fill(table); 	//Thực hiện câu lệnh SELECT và đổ dữ liệu vào bảng table
+            Myadapter.Fill(table); 	//Thực hiện câu lệnh SELECT và đổ dữ liệu vào bảng table
             return table;
         }
 
@@ -77,23 +74,34 @@ namespace viduProject1605
         }
 
         //RunSql có tác dụng thực thi các câu lệnh SQL.
-        public static void RunSql(string sql)
+        /*        public static void RunSql(string sql)
+                {
+                    SqlCommand cmd;		                // Khai báo đối tượng SqlCommand
+                    cmd = new SqlCommand();	         // Khởi tạo đối tượng
+                    cmd.Connection = con;	  // Gán kết nối
+                    cmd.CommandText = sql;			  // Gán câu lệnh SQL
+                    try
+                    {
+                        cmd.ExecuteNonQuery();		  // Thực hiện câu lệnh SQL update
+                    }
+                    catch (System.Exception ex)
+                    {
+                        MessageBox.Show(ex.ToString());
+                    }
+                    cmd.Dispose(); //Giai phong
+                    cmd = null;
+                }*/
+
+        public static void FillCombo(string sql, ComboBox cbo, string ma, string ten)
         {
-            SqlCommand cmd;		                // Khai báo đối tượng SqlCommand
-            cmd = new SqlCommand();	         // Khởi tạo đối tượng
-            cmd.Connection = con;	  // Gán kết nối
-            cmd.CommandText = sql;			  // Gán câu lệnh SQL
-            try
-            {
-                cmd.ExecuteNonQuery();		  // Thực hiện câu lệnh SQL update
-            }
-            catch (System.Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-            cmd.Dispose(); //Giai phong
-            cmd = null;
+            SqlDataAdapter Mydata = new SqlDataAdapter(sql, con);
+            DataTable mytable = new DataTable();
+            Mydata.Fill(mytable);
+            cbo.DataSource = mytable;
+            cbo.ValueMember = ma;    // Truong gia tri
+            cbo.DisplayMember = ten;    // Truong hien thi
         }
+
 
     }
 }

@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Data.SqlClient;
-using System.Data;
 
 namespace viduProject1605
 {
@@ -33,40 +32,13 @@ namespace viduProject1605
         {
             string sql;
             sql = "SELECT Machatlieu, Tenchatlieu FROM Chatlieu order by Machatlieu ASC";
-            tblChatLieu = DAO.GetDataToTable(sql);
-            DataGridView.DataSource = tblChatLieu;
-            DataGridView.Columns[0].HeaderText = "Mã chất liệu";
-            DataGridView.Columns[1].HeaderText = "Tên chất liệu";
-            DataGridView.Columns[0].Width = 100;
-            DataGridView.Columns[1].Width = 440;
-            // Không cho phép thêm mới dữ liệu trực tiếp trên lưới
-            DataGridView.AllowUserToAddRows = false;
-            // Không cho phép sửa dữ liệu trực tiếp trên lưới
-            DataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
+            tblChatLieu = DAO.LoadDataToTable(sql);
+            DataGridViewCL.DataSource = tblChatLieu;
         }
-
-
-
 
         private void btnDong_Click(object sender, EventArgs e)
         {
             this.Close();
-        }
-
-        private void btnThem_Click(object sender, EventArgs e)
-        {
-            //tat 3 nut dau tien: Them sua xoa
-            btnThem.Enabled = false;
-            btnSua.Enabled = false;
-            btnXoa.Enabled = false;
-            //Hien thi nut Luu de luu ban ghi moi la 2 dong duoc go tren 2 textbox
-            btnLuu.Enabled = true;
-            //Hien thi bo qua neu nguoi dung khong muon them moi ban ghi do nua
-            btnBoqua.Enabled = true;
-            //Sau khi Luu hoac Bo qua thi xoa trang du lieu de nguoi dung nhap lai
-            ResetValues();
-            txtMaChatLieu.Enabled = true;
-            txtMaChatLieu.Focus();
         }
 
         private void ResetValues()
@@ -77,22 +49,22 @@ namespace viduProject1605
 
         private void btnLuu_Click(object sender, EventArgs e)
         {
-            //Kiem tra nguoi dung nhap ban ghi roi thi moi LUU
+            //(Check du lieu) Kiem tra nguoi dung nhap ban ghi roi thi moi LUU
             //Ham Trim se loai bo cac khoang trang
-            if (txtMaChatLieu.Text.Trim().Length == 0)
+            if (txtMaChatLieu.Text.Trim() == "")
             {
                 MessageBox.Show("Bạn phải nhập mã chất liệu", "Thông báo",MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtMaChatLieu.Focus();
                 return;
             }
-            if (txtTenChatLieu.Text.Trim().Length == 0)
+            if (txtTenChatLieu.Text.Trim() == "")
             {
                 MessageBox.Show("Bạn phải nhập tên chất liệu", "Thông báo",MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtTenChatLieu.Focus();
                 return;
             }
 
-            string sql = "SELECT MaChatlieu FROM ChatLieu WHERE MaChatlieu =N'" +txtMaChatLieu.Text.Trim() + "'";
+            string sql = "SELECT MaChatlieu FROM ChatLieu WHERE MaChatlieu = '" +txtMaChatLieu.Text + "'";
             if (DAO.CheckKey(sql))
             {
                 MessageBox.Show("Mã chất liệu này đã có, bạn phải nhập mã khác", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -100,17 +72,71 @@ namespace viduProject1605
                 txtMaChatLieu.Text = "";
                 return;
             }
-            sql = "INSERT INTO ChatLieu(Machatlieu,Tenchatlieu) VALUES(N'" + txtMaChatLieu.Text + "',N'" + txtTenChatLieu.Text + "')";
-            DAO.RunSql(sql);
-            Load_DataGridView();
-            ResetValues();
 
-            btnXoa.Enabled = true;
-            btnThem.Enabled = true;
-            btnSua.Enabled = true;
-            btnBoqua.Enabled = false;
-            btnLuu.Enabled = false;
-            txtMaChatLieu.Enabled = false;
+            if (!DAO.CheckKey(sql))
+            {
+                try
+                {
+                    sql = "INSERT INTO ChatLieu(Machatlieu,Tenchatlieu) VALUES(N'" + txtMaChatLieu.Text + "', '" + txtTenChatLieu.Text + "')";
+                    SqlCommand myCommand = new SqlCommand(sql, DAO.con);                     // Khai báo đối tượng SqlCommand
+                    myCommand.ExecuteNonQuery();
+                    Load_DataGridView();
+                    ResetValues();
+
+                    //Sau khi thuc hien thanh cong thi lai hien cac nut len de su dung tiep
+                    btnXoa.Enabled = true;
+                    btnThem.Enabled = true;
+                    btnSua.Enabled = true;
+                    btnBoqua.Enabled = false;
+                    btnLuu.Enabled = false;
+                    txtMaChatLieu.Enabled = false;
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+
+        }
+
+        private void DataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            txtMaChatLieu.Text = DataGridViewCL.CurrentRow.Cells[0].Value.ToString();
+            txtTenChatLieu.Text = DataGridViewCL.CurrentRow.Cells[1].Value.ToString();
+        }
+
+        private void btnXoa_Click(object sender, EventArgs e)
+        {
+            if(MessageBox.Show("Ban co muon xoa khong?","Thong bao",MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                try
+                {
+                    string sql = "DELETE from Chatlieu WHERE Machatlieu= '" + txtMaChatLieu.Text + "'";
+                    SqlCommand myCommand = new SqlCommand(sql, DAO.con);
+                    myCommand.ExecuteNonQuery();
+                    Load_DataGridView();
+                    txtMaChatLieu.Text = "";
+                    txtTenChatLieu.Text = "";
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show("Xoa khong thanh cong!" + ex.Message);
+                }
+            }
+        }
+
+        private void btnThem_Click(object sender, EventArgs e)
+        {
+            txtMaChatLieu.Text = "";
+            txtTenChatLieu.Text = "";
+            btnSua.Enabled = false;
+            btnXoa.Enabled = false;
+            btnThem.Enabled = false;
+            btnBoqua.Enabled = true;
+            btnLuu.Enabled = true;
+            txtMaChatLieu.Enabled = true;
+            txtMaChatLieu.Focus();
+            txtMaChatLieu.Focus();
         }
     }
 }
